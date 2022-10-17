@@ -3,13 +3,18 @@ package com.food.infrastructure.repositoryes;
 import com.food.domain.model.Cozinha;
 import com.food.domain.model.Estado;
 import com.food.domain.repositoryes.EstadoRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Component
 public class EstadoRepositoryImpl implements EstadoRepository {
 
+
+    @PersistenceContext
     private EntityManager manager;
 
 
