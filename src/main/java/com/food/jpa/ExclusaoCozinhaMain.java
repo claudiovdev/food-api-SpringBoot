@@ -2,6 +2,7 @@ package com.food.jpa;
 
 import com.food.FoodApplication;
 import com.food.domain.model.Cozinha;
+import com.food.domain.repositoryes.CozinhaRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -14,12 +15,12 @@ public class ExclusaoCozinhaMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+        CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
 
         Cozinha cozinha = new Cozinha();
         cozinha.setId(2L);
 
-        cadastroCozinha.deletar(cozinha);
+        cozinhaRepository.remover(cozinha);
     }
 
 }
