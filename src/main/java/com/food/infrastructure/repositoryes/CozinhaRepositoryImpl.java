@@ -2,14 +2,19 @@ package com.food.infrastructure.repositoryes;
 
 import com.food.domain.model.Cozinha;
 import com.food.domain.repositoryes.CozinhaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+@Component
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
+    @PersistenceContext
     private EntityManager manager;
 
     public List<Cozinha> listar(){
