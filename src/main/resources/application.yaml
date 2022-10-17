@@ -1,9 +1,9 @@
 server:
-  port: 8090
+  port: 8092
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/locadora-autenticacaodeusuario
+    url: jdbc:postgresql://localhost:5432/food
     username: postgres
     password: vini4222
   jpa:
