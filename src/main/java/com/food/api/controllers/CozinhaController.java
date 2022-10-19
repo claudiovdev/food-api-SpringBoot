@@ -3,6 +3,7 @@ package com.food.api.controllers;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repositoryes.CozinhaRepository;
 import org.apache.coyote.Response;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ public class CozinhaController {
         Cozinha cozinha =   cozinhaRepository.buscar(id);
 
         if(cozinha != null){
-            ResponseEntity.ok(cozinha);
+           return  ResponseEntity.ok(cozinha);
         }
 
        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -39,6 +40,21 @@ public class CozinhaController {
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha salvar(@RequestBody Cozinha cozinha){
         return cozinhaRepository.salvar(cozinha);
+    }
+
+
+    @PutMapping("/{cozinhaId}")
+    public ResponseEntity<Cozinha> atualizar(@PathVariable("cozinhaId") Long id, @RequestBody Cozinha cozinha){
+
+        Cozinha cozinhaAtual = cozinhaRepository.buscar(id);
+
+        if (cozinhaAtual != null){
+            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+            cozinhaRepository.salvar(cozinhaAtual);
+           return  ResponseEntity.ok(cozinhaAtual);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }
