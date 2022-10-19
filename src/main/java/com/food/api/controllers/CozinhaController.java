@@ -2,8 +2,11 @@ package com.food.api.controllers;
 
 import com.food.domain.model.Cozinha;
 import com.food.domain.repositoryes.CozinhaRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +27,15 @@ public class CozinhaController {
     }
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha buscar(@PathVariable("cozinhaId") Long id){
-        return  cozinhaRepository.buscar(id);
+    public ResponseEntity<Cozinha>  buscar(@PathVariable("cozinhaId") Long id){
+
+        Cozinha cozinha =   cozinhaRepository.buscar(id);
+
+        if(cozinha != null){
+            ResponseEntity.ok(cozinha);
+        }
+
+       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }
