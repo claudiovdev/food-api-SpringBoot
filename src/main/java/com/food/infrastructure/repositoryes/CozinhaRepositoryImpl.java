@@ -3,6 +3,7 @@ package com.food.infrastructure.repositoryes;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repositoryes.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,15 +31,18 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
     }
 
     @Override
+    @Transactional
+    public void remover(Long id) {
+       Cozinha cozinha = buscar(id);
+       if(cozinha == null){
+           throw new EmptyResultDataAccessException(1);
+       }
+        manager.remove(cozinha);
+    }
+
+    @Override
     public Cozinha buscar(Long id){
         return manager.find(Cozinha.class, id);
     }
 
-
-    @Override
-    @Transactional
-    public void remover(Cozinha cozinha){
-        cozinha = buscar(cozinha.getId());
-        manager.remove(cozinha);
-    }
 }

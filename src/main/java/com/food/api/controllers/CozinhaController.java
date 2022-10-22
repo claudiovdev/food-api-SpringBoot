@@ -1,7 +1,10 @@
 package com.food.api.controllers;
 
+import com.food.domain.exceptions.EntidadeEmUsoException;
+import com.food.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repositoryes.CozinhaRepository;
+import com.food.domain.services.CadastroCozinhaService;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class CozinhaController {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
+
+    @Autowired
+    private CadastroCozinhaService cadastroCozinhaService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)   //Com essa produces definimos que o retnoro será sempre em Json á nivel de método
     public List<Cozinha> listar(){
@@ -40,7 +46,7 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha salvar(@RequestBody Cozinha cozinha){
-        return cozinhaRepository.salvar(cozinha);
+        return cadastroCozinhaService.salvar(cozinha);
     }
 
 
@@ -51,7 +57,7 @@ public class CozinhaController {
 
         if (cozinhaAtual != null){
             BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-            cozinhaRepository.salvar(cozinhaAtual);
+            cadastroCozinhaService.salvar(cozinhaAtual);
            return  ResponseEntity.ok(cozinhaAtual);
         }
 
@@ -60,21 +66,15 @@ public class CozinhaController {
 
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> deletar(@PathVariable("cozinhaId") Long id) {
-
-        Cozinha cozinha = cozinhaRepository.buscar(id);
-
         try {
-            if(cozinha != null){
-            cozinhaRepository.remover(cozinha);
+            cadastroCozinhaService.remover(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-
+        } catch (EntidadeNaoEncontradaException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        }catch (DataIntegrityViolationException e){
+        }catch (EntidadeEmUsoException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
 
     }
 }
