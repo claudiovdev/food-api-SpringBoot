@@ -1,42 +1,47 @@
 package com.food.infrastructure.repositoryes;
 
 import com.food.domain.model.Restaurante;
-import com.food.domain.repositoryes.RestauranteRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import com.food.domain.repositoryes.RestauranteRepositoryQueries;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Predicate;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class RestauranteRepositoryImpl implements RestauranteRepository {
+@Repository
+public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public List<Restaurante> listar() {
-        TypedQuery<Restaurante> query = manager.createQuery("From Restaurante", Restaurante.class);
+    public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+        var builder = manager.getCriteriaBuilder();
+        var criteria = builder.createQuery(Restaurante.class);
+        var root = criteria.from(Restaurante.class);
+
+        ArrayList<Predicate> predicates = new ArrayList<>();
+
+        if (StringUtils.hasText(nome)){
+            predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
+        }
+        if(taxaFreteInicial != null){
+            predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+        }
+        if (taxaFreteFinal != null){
+            predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+        }
+
+        criteria.where(predicates.toArray(new Predicate[0]));
+
+        var query = manager.createQuery(criteria);
+
+
         return query.getResultList();
     }
 
-    @Override
-    public Restaurante buscar(Long id) {
-        return manager.find(Restaurante.class, id);
-    }
-
-    @Transactional
-    @Override
-    public Restaurante salvar(Restaurante restaurante) {
-        return manager.merge(restaurante);
-    }
-
-    @Transactional
-    @Override
-    public void remover(Restaurante restaurante) {
-         restaurante = buscar(restaurante.getId());
-         manager.remove(restaurante);
-    }
 }

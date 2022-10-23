@@ -18,20 +18,16 @@ public class CadastroEstadoService {
     EstadoRepository estadoRepository;
 
     public List<Estado> listar(){
-        return estadoRepository.listar();
+        return estadoRepository.findAll();
     }
 
     public Estado salvar(Estado estado){
-        return estadoRepository.salvar(estado);
+        return estadoRepository.save(estado);
     }
-
-   public Estado buscar(Long id){
-        return estadoRepository.buscar(id);
-   }
 
    public void remover(Long estadoId){
         try {
-            estadoRepository.remover(estadoId);
+            estadoRepository.deleteById(estadoId);
 
         }catch (EmptyResultDataAccessException e){
             throw new EntidadeNaoEncontradaException(

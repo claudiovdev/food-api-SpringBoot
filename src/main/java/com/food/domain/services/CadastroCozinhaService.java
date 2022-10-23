@@ -9,21 +9,25 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CadastroCozinhaService {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
+    public List<Cozinha> listar(){return cozinhaRepository.findAll();}
+
     public Cozinha salvar(Cozinha cozinha){
-        return cozinhaRepository.salvar(cozinha);
+        return cozinhaRepository.save(cozinha);
     }
 
     public void remover(Long id){
 
 
         try {
-            cozinhaRepository.remover(id);
+            cozinhaRepository.deleteById(id);
 
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

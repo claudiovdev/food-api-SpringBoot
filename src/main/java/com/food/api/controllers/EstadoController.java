@@ -1,5 +1,7 @@
 package com.food.api.controllers;
 
+import com.food.domain.exceptions.EntidadeEmUsoException;
+import com.food.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.domain.model.Estado;
 import com.food.domain.repositoryes.EstadoRepository;
 import com.food.domain.services.CadastroEstadoService;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/estados")
 @RestController
@@ -18,6 +21,8 @@ public class EstadoController {
 
     @Autowired
     CadastroEstadoService cadastroEstadoService;
+    @Autowired
+    EstadoRepository estadoRepository;
 
     @GetMapping
     public List<Estado> listar(){
@@ -32,8 +37,8 @@ public class EstadoController {
 
     @GetMapping("/{estadoId}")
     public ResponseEntity<Object> buscar(@PathVariable("estadoId") Long id){
-        Estado estado = cadastroEstadoService.buscar(id);
-        if(estado != null){
+        Optional<Estado> estado = estadoRepository.findById(id);
+        if(estado.isPresent()){
             return ResponseEntity.ok(estado);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum estado encontrado");
@@ -42,24 +47,25 @@ public class EstadoController {
 
     @DeleteMapping("/{estadoId}")
     public ResponseEntity<Object> remover(@PathVariable("estadoId") Long id){
-        Estado estado = cadastroEstadoService.buscar(id);
-
-        if(estado != null){
-            cadastroEstadoService.remover(estado.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("Estado deletado com sucesso");
+        try {
+            cadastroEstadoService.remover(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch (EntidadeNaoEncontradaException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (EntidadeEmUsoException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum Estado encontrado");
     }
 
     @PutMapping("/{estadoId}")
     public ResponseEntity<Object> atualizar(@PathVariable("estadoId") Long id,@RequestBody Estado estado){
 
-        Estado estadoAtual = cadastroEstadoService.buscar(id);
+        Optional<Estado> estadoAtual = estadoRepository.findById(id);
 
-        if (estadoAtual != null){
-            BeanUtils.copyProperties(estado, estadoAtual, "id");
-            estadoAtual = cadastroEstadoService.salvar(estadoAtual);
-            return ResponseEntity.status(HttpStatus.OK).body(estadoAtual);
+        if (estadoAtual.isPresent()){
+            BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
+          Estado  estadoSalvo = cadastroEstadoService.salvar(estadoAtual.get());
+            return ResponseEntity.status(HttpStatus.OK).body(estadoSalvo);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum está encontrado");
     }
