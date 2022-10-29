@@ -6,6 +6,9 @@ import com.food.domain.model.Restaurante;
 import com.food.domain.repositoryes.RestauranteRepository;
 import com.food.domain.services.CadastroRestauranteService;
 
+import com.food.infrastructure.spec.RestauranteComFrenteGratisSpec;
+
+import com.food.infrastructure.spec.RestauranteComNomeSemelhanteSpec;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -111,4 +114,10 @@ public class RestauranteController {
         return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
     }
 
+    @GetMapping("/consultar-por-frete-gratis")
+    public List<Restaurante> consultarComFreteGratis(String nome){
+       var comFreteGratis = new RestauranteComFrenteGratisSpec();
+       var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+       return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+    }
 }
