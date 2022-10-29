@@ -115,6 +115,6 @@ public class RestauranteController {
 
     @GetMapping("/consultar-por-frete-gratis")
     public List<Restaurante> consultarComFreteGratis(String nome){
-       return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
+       return restauranteRepository.ComFreteGratis(nome);
     }
 }
