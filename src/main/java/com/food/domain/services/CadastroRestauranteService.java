@@ -38,7 +38,7 @@ public class CadastroRestauranteService {
     }
 
     public Restaurante salvar(Restaurante restaurante) {
-        Long cozinhaId = restaurante.cozinha.getId();
+        Long cozinhaId = restaurante.getCozinha().getId();
         Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
 
         if (cozinha.isEmpty()) {
