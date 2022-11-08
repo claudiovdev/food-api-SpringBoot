@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -19,6 +21,6 @@ public class Cozinha {
 
 
     private String nome;
-
-
+    @OneToMany(mappedBy = "cozinha")
+    private List<Restaurante> restaurates = new ArrayList<>();
 }
