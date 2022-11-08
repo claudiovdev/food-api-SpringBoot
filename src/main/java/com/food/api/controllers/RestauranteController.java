@@ -5,11 +5,9 @@ import com.food.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repositoryes.RestauranteRepository;
 import com.food.domain.services.CadastroRestauranteService;
-
+import com.food.infrastructure.spec.RestauranteSpecs;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
@@ -21,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
+
 @RequestMapping("/restaurantes")
 @RestController
 public class RestauranteController {
@@ -30,6 +30,7 @@ public class RestauranteController {
 
     @Autowired
     private CadastroRestauranteService cadastroRestauranteService;
+
 
     @GetMapping
     public List<Restaurante> listar(){
@@ -111,4 +112,8 @@ public class RestauranteController {
         return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
     }
 
+    @GetMapping("/consultar-por-frete-gratis")
+    public List<Restaurante> consultarComFreteGratis(String nome){
+       return restauranteRepository.ComFreteGratis(nome);
+    }
 }

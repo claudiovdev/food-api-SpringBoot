@@ -1,5 +1,6 @@
 package com.food.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,10 +31,19 @@ public class Restaurante {
     @JoinColumn(name = "cozinha_id", nullable = false)
     public Cozinha cozinha;
 
+<<<<<<< HEAD
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
     inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private List<FormaPagamento> formasPagamento = new ArrayList<>();
+=======
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "restaurante_forma_pagamento",
+    joinColumns = @JoinColumn(name = "restaurante_id"),
+    inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    List<FormaPagamento> formasPagamento = new ArrayList<>();
+>>>>>>> 19dc7cad695d92ec46c3e132b94876107961dde1
 
 
 }

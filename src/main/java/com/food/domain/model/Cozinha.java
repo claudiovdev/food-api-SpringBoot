@@ -1,5 +1,6 @@
 package com.food.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,8 +20,16 @@ public class Cozinha {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String nome;
+<<<<<<< HEAD
     @OneToMany(mappedBy = "cozinha")
     private List<Restaurante> restaurates = new ArrayList<>();
+=======
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "cozinha")
+    private List<Restaurante> restaurantes = new ArrayList<>();
+
+
+>>>>>>> 19dc7cad695d92ec46c3e132b94876107961dde1
 }
