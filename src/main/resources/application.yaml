@@ -8,10 +8,10 @@ spring:
     password: vini4222
   jpa:
     hibernate:
-      ddl-auto: update
+     # ddl-auto: update
       dialect: org.hibernate.dialect.PostgreSQLDialect
       jdbc:
-        lob.non-contextual-creation: true
+      lob.non-contextual-creation: true
     properties:
       hibernate:
         show_sql: true
