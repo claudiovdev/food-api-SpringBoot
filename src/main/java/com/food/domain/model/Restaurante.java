@@ -31,6 +31,7 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
@@ -40,13 +41,11 @@ public class Restaurante {
     private Endereco endereco;
 
     @JsonIgnore
-
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime dataCadastro;
 
     @JsonIgnore
-
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime dataAtualizacao;
