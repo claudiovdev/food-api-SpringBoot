@@ -1,10 +1,10 @@
 package com.food.api.controllers;
 
-import com.food.domain.exceptions.EntidadeEmUsoException;
-import com.food.domain.exceptions.EntidadeNaoEncontradaException;
-import com.food.domain.model.Estado;
-import com.food.domain.repositoryes.EstadoRepository;
-import com.food.domain.services.CadastroEstadoService;
+import com.food.api.domain.exceptions.EntidadeEmUsoException;
+import com.food.api.domain.services.CadastroEstadoService;
+import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.food.api.domain.model.Estado;
+import com.food.api.domain.repositoryes.EstadoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

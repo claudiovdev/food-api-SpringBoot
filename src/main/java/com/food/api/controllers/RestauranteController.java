@@ -1,11 +1,10 @@
 package com.food.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.food.domain.exceptions.EntidadeNaoEncontradaException;
-import com.food.domain.model.Restaurante;
-import com.food.domain.repositoryes.RestauranteRepository;
-import com.food.domain.services.CadastroRestauranteService;
-import com.food.infrastructure.spec.RestauranteSpecs;
+import com.food.api.domain.services.CadastroRestauranteService;
+import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.food.api.domain.model.Restaurante;
+import com.food.api.domain.repositoryes.RestauranteRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

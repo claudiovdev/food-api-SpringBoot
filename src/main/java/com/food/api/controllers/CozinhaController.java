@@ -1,14 +1,10 @@
 package com.food.api.controllers;
 
-import com.food.domain.exceptions.EntidadeEmUsoException;
-import com.food.domain.exceptions.EntidadeNaoEncontradaException;
-import com.food.domain.model.Cozinha;
-import com.food.domain.repositoryes.CozinhaRepository;
-import com.food.domain.services.CadastroCozinhaService;
-import org.apache.coyote.Response;
+import com.food.api.domain.model.Cozinha;
+import com.food.api.domain.repositoryes.CozinhaRepository;
+import com.food.api.domain.services.CadastroCozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +30,9 @@ public class CozinhaController {
         return cadastroCozinhaService.listar();
     }
 
+
+
+
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha>  buscar(@PathVariable("cozinhaId") Long id){
 
@@ -45,6 +44,9 @@ public class CozinhaController {
 
        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,19 +69,6 @@ public class CozinhaController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-//    @DeleteMapping("/{cozinhaId}")
-//    public ResponseEntity<Cozinha> deletar(@PathVariable("cozinhaId") Long id) {
-//        try {
-//            cadastroCozinhaService.remover(id);
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        } catch (EntidadeNaoEncontradaException e){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//
-//        }catch (EntidadeEmUsoException e){
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//        }
-//
-//    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{cozinhaId}")
