@@ -1,5 +1,6 @@
 package com.food.api.controllers;
 
+import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.api.domain.model.Cozinha;
 import com.food.api.domain.repositoryes.CozinhaRepository;
 import com.food.api.domain.services.CadastroCozinhaService;
@@ -34,15 +35,10 @@ public class CozinhaController {
 
 
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha>  buscar(@PathVariable("cozinhaId") Long id){
+    public Cozinha  buscar(@PathVariable("cozinhaId") Long id){
 
-        Optional<Cozinha> cozinha =   cozinhaRepository.findById(id);
+        return cozinhaRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Teste"));
 
-        if(cozinha.isPresent()){
-           return  ResponseEntity.ok(cozinha.get());
-        }
-
-       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 
