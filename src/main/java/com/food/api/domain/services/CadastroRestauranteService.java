@@ -1,11 +1,14 @@
 package com.food.api.domain.services;
 
+import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.food.api.domain.exceptions.RestauranteNaoEncontradaException;
 import com.food.api.domain.model.Cozinha;
 import com.food.api.domain.model.Restaurante;
 import com.food.api.domain.repositoryes.CozinhaRepository;
 import com.food.api.domain.repositoryes.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +18,6 @@ import java.util.Optional;
 
 @Service
 public class CadastroRestauranteService {
-
-    public static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de restaurante com código %d";
-
 
     @Autowired
     private RestauranteRepository restauranteRepository;
@@ -32,8 +32,7 @@ public class CadastroRestauranteService {
             restauranteRepository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, id));
+            throw new RestauranteNaoEncontradaException(id);
         }
     }
 
@@ -45,7 +44,7 @@ public class CadastroRestauranteService {
     }
 
     public Restaurante buscar(Long id){
-        return restauranteRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, id)));
+        return restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradaException(id));
     }
 
     public List<Restaurante> consultarComFreteGratis(String nome){

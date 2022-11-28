@@ -1,5 +1,6 @@
 package com.food.api.domain.services;
 
+import com.food.api.domain.exceptions.CidadeNaoEncontradaException;
 import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.api.domain.model.Cidade;
@@ -17,7 +18,6 @@ import java.util.Optional;
 @Service
 public class CadastroCidadeService {
 
-    public static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de cidade com código %d";
     public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
 
     @Autowired
@@ -45,8 +45,7 @@ public class CadastroCidadeService {
             cidadeRepository.deleteById(id);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_CIDADE_NAO_ENCONTRADA, id));
+            throw new CidadeNaoEncontradaException(id);
 
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
@@ -55,7 +54,7 @@ public class CadastroCidadeService {
     }
 
     public Cidade buscarCidade(Long id){
-        return cidadeRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id)));
+        return cidadeRepository.findById(id).orElseThrow(() -> new CidadeNaoEncontradaException(id));
     }
 
 }

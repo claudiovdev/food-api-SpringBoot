@@ -1,5 +1,6 @@
 package com.food.api.domain.services;
 
+import com.food.api.domain.exceptions.CozinhaNaoEncontradaException;
 import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.repositoryes.CozinhaRepository;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
@@ -14,7 +15,7 @@ import java.util.List;
 @Service
 public class CadastroCozinhaService {
 
-    public static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe um cadastro de cozinha com código %d";
+
 
     public static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida, pois está em uso";
 
@@ -29,13 +30,11 @@ public class CadastroCozinhaService {
 
     public void remover(Long id){
 
-
         try {
             cozinhaRepository.deleteById(id);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_COZINHA_NAO_ENCONTRADA, id));
+            throw new CozinhaNaoEncontradaException(id);
 
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
@@ -44,7 +43,7 @@ public class CadastroCozinhaService {
     }
 
     public Cozinha buscarCozinha(Long id){
-        return cozinhaRepository.findById(id).orElseThrow(() -> new EntidadeEmUsoException(String.format(MSG_COZINHA_NAO_ENCONTRADA, id)));
+        return cozinhaRepository.findById(id).orElseThrow(() -> new CozinhaNaoEncontradaException(id));
     }
 
 }

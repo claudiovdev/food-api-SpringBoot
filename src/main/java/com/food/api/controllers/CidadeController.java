@@ -1,5 +1,6 @@
 package com.food.api.controllers;
 
+import com.food.api.domain.exceptions.CozinhaNaoEncontradaException;
 import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.api.domain.exceptions.NegocioException;
@@ -35,7 +36,7 @@ public class CidadeController {
     public Cidade salvar(@RequestBody  Cidade cidade) {
         try {
             return service.salvar(cidade);
-        }catch (EntidadeNaoEncontradaException e){
+        }catch (CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
     }
@@ -59,7 +60,7 @@ public class CidadeController {
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
         try {
             return  service.salvar(cidadeAtual);
-        }catch (EntidadeNaoEncontradaException e){
+        }catch (CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
 

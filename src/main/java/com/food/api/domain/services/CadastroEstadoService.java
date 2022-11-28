@@ -2,6 +2,7 @@ package com.food.api.domain.services;
 
 import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.food.api.domain.exceptions.EstadoNaoEncontradaException;
 import com.food.api.domain.model.Estado;
 import com.food.api.domain.repositoryes.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import java.util.List;
 @Service
 public class CadastroEstadoService {
 
-    public static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com o codigo %d";
     public static final String MSG_ESTADO_EM_USO = "Estado de codigo %d não pode ser excluisa, pois está em uso";
     @Autowired
     EstadoRepository estadoRepository;
@@ -40,6 +40,6 @@ public class CadastroEstadoService {
    }
 
    public Estado buscarEstado(Long id){
-        return estadoRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO,id)));
+        return estadoRepository.findById(id).orElseThrow(() -> new EstadoNaoEncontradaException(id));
    }
 }
