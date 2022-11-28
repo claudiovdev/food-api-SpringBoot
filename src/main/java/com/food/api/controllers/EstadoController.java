@@ -4,7 +4,6 @@ import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.services.CadastroEstadoService;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.api.domain.model.Estado;
-import com.food.api.domain.repositoryes.EstadoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,35 +19,30 @@ public class EstadoController {
 
 
     @Autowired
-    CadastroEstadoService cadastroEstadoService;
-    @Autowired
-    EstadoRepository estadoRepository;
+    CadastroEstadoService service;
+
 
     @GetMapping
     public List<Estado> listar(){
-       return cadastroEstadoService.listar();
+       return service.listar();
     }
 
     @PostMapping
     public ResponseEntity<Estado> salvar(@RequestBody Estado estado){
-       estado = cadastroEstadoService.salvar(estado);
+       estado = service.salvar(estado);
        return ResponseEntity.ok().body(estado);
     }
 
     @GetMapping("/{estadoId}")
-    public ResponseEntity<Object> buscar(@PathVariable("estadoId") Long id){
-        Optional<Estado> estado = estadoRepository.findById(id);
-        if(estado.isPresent()){
-            return ResponseEntity.ok(estado);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum estado encontrado");
+    public Estado buscar(@PathVariable("estadoId") Long id){
+        return service.buscarEstado(id);
     }
 
 
     @DeleteMapping("/{estadoId}")
     public ResponseEntity<Object> remover(@PathVariable("estadoId") Long id){
         try {
-            cadastroEstadoService.remover(id);
+            service.remover(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (EntidadeNaoEncontradaException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -60,13 +54,10 @@ public class EstadoController {
     @PutMapping("/{estadoId}")
     public ResponseEntity<Object> atualizar(@PathVariable("estadoId") Long id,@RequestBody Estado estado){
 
-        Optional<Estado> estadoAtual = estadoRepository.findById(id);
-
-        if (estadoAtual.isPresent()){
-            BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
-          Estado  estadoSalvo = cadastroEstadoService.salvar(estadoAtual.get());
+        Estado estadoAtual = service.buscarEstado(id);
+            BeanUtils.copyProperties(estado, estadoAtual, "id");
+            Estado  estadoSalvo = service.salvar(estadoAtual);
             return ResponseEntity.status(HttpStatus.OK).body(estadoSalvo);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum está encontrado");
-    }
+
 }

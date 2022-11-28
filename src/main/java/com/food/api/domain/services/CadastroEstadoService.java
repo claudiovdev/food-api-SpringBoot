@@ -14,6 +14,8 @@ import java.util.List;
 @Service
 public class CadastroEstadoService {
 
+    public static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com o codigo %d";
+    public static final String MSG_ESTADO_EM_USO = "Estado de codigo %d não pode ser excluisa, pois está em uso";
     @Autowired
     EstadoRepository estadoRepository;
 
@@ -25,19 +27,22 @@ public class CadastroEstadoService {
         return estadoRepository.save(estado);
     }
 
-   public void remover(Long estadoId){
+   public void remover(Long id){
         try {
-            estadoRepository.deleteById(estadoId);
+            estadoRepository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e){
             throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de estado com o codigo %d",estadoId )
+                    String.format(MSG_ESTADO_NAO_ENCONTRADO,id )
             );
         }catch (DataIntegrityViolationException e){
             throw new EntidadeEmUsoException(
-                    String.format("Estado de codigo %d não pode ser excluisa, pois está em uso", estadoId)
+                    String.format(MSG_ESTADO_EM_USO, id)
             );
         }
+   }
 
+   public Estado buscarEstado(Long id){
+        return estadoRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO,id)));
    }
 }

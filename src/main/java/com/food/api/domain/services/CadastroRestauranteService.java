@@ -9,17 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CadastroRestauranteService {
 
+    public static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de restaurante com código %d";
+
+
     @Autowired
     private RestauranteRepository restauranteRepository;
 
     @Autowired
-    private CozinhaRepository cozinhaRepository;
+    private CadastroCozinhaService cozinhaService;
 
     public List<Restaurante> listar(){return  restauranteRepository.findAll();}
 
@@ -29,21 +33,27 @@ public class CadastroRestauranteService {
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de restaurante com código %d", id));
+                    String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, id));
         }
     }
 
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
-        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
-
-        if (cozinha.isEmpty()) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe cadastro de cozinha com codigo %d", cozinhaId)
-            );
-        }
-
-        restaurante.setCozinha(cozinha.get());
+        var cozinha = cozinhaService.buscarCozinha(cozinhaId);
+        restaurante.setCozinha(cozinha);
         return restauranteRepository.save(restaurante);
     }
+
+    public Restaurante buscar(Long id){
+        return restauranteRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, id)));
+    }
+
+    public List<Restaurante> consultarComFreteGratis(String nome){
+        return restauranteRepository.ComFreteGratis(nome);
+    }
+
+    public List<Restaurante> consultarPorNome(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
+        return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
+    }
+
 }

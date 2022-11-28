@@ -24,73 +24,46 @@ import java.util.Optional;
 @RestController
 public class RestauranteController {
 
-    @Autowired
-    public RestauranteRepository restauranteRepository;
 
     @Autowired
-    private CadastroRestauranteService cadastroRestauranteService;
+    private CadastroRestauranteService service;
+
+    private RestauranteRepository restauranteRepository;
 
 
     @GetMapping
     public List<Restaurante> listar(){
-        return cadastroRestauranteService.listar();
+        return service.listar();
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable("restauranteId") Long id){
-        Optional<Restaurante> restaurante = restauranteRepository.findById(id);
-
-        if(restaurante.isPresent()){
-            return ResponseEntity.ok(restaurante.get());
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public Restaurante buscar(@PathVariable("restauranteId") Long id){
+      return  service.buscar(id);
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> salvar(@RequestBody Restaurante restaurante){
-
-        try {
-          restaurante  = cadastroRestauranteService.salvar(restaurante);
-          return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-        }catch (EntidadeNaoEncontradaException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public Restaurante salvar(@RequestBody Restaurante restaurante){
+          return service.salvar(restaurante);
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<Object> atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
-
-       try {
-           Optional<Restaurante> restauranteAtual = restauranteRepository.findById(id);
-
-           if(restauranteAtual.isPresent()){
-               BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id", "formasPagamento", "endereco", "dataCadastro", "produto");
-
-               cadastroRestauranteService.salvar(restauranteAtual.get());
-               return ResponseEntity.status(HttpStatus.CREATED).body("Restaurante atualizado com sucesso");
-           }
-           return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurante não encontrado!");
-
-       }catch (EntidadeNaoEncontradaException e){
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-       }
+    public Restaurante atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
+           Restaurante restauranteAtual = buscar(id);
+           BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produto");
+           return service.salvar(restauranteAtual);
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
+    public Restaurante atualizarParcial(@PathVariable Long restauranteId,
                                               @RequestBody Map<String, Object> campos) {
-        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+        Restaurante restauranteAtual = buscar(restauranteId);
 
-        if (restauranteAtual.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
 
-        merge(campos, restauranteAtual.get());
+        merge(campos, restauranteAtual);
 
-        return atualizar(restauranteId, restauranteAtual.get());
+        return atualizar(restauranteId, restauranteAtual);
     }
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -108,11 +81,11 @@ public class RestauranteController {
 
     @GetMapping("/consulta-por-nome")
     public List<Restaurante> consultarPorNome(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
-        return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
+        return service.consultarPorNome(nome, taxaFreteInicial, taxaFreteFinal);
     }
 
     @GetMapping("/consultar-por-frete-gratis")
     public List<Restaurante> consultarComFreteGratis(String nome){
-       return restauranteRepository.ComFreteGratis(nome);
+       return service.consultarComFreteGratis(nome);
     }
 }
