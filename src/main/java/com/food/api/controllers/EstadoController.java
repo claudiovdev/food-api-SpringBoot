@@ -40,16 +40,8 @@ public class EstadoController {
 
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<Object> remover(@PathVariable("estadoId") Long id){
-        try {
-            service.remover(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }catch (EntidadeNaoEncontradaException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }catch (EntidadeEmUsoException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable("estadoId") Long id){service.remover(id);}
 
     @PutMapping("/{estadoId}")
     public ResponseEntity<Object> atualizar(@PathVariable("estadoId") Long id,@RequestBody Estado estado){

@@ -2,6 +2,7 @@ package com.food.api.controllers;
 
 import com.food.api.domain.exceptions.EntidadeEmUsoException;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
+import com.food.api.domain.exceptions.NegocioException;
 import com.food.api.domain.model.Cidade;
 import com.food.api.domain.repositoryes.CidadeRepository;
 import com.food.api.domain.services.CadastroCidadeService;
@@ -32,24 +33,35 @@ public class CidadeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade salvar(@RequestBody  Cidade cidade) {
-        return service.salvar(cidade);
+        try {
+            return service.salvar(cidade);
+        }catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
     }
 
-    @GetMapping("/{cidadeId}")
+    @GetMapping("/{id}")
     public Cidade buscar(@PathVariable("cidadeId") Long id){
         return service.buscarCidade(id);
     }
 
-    @DeleteMapping("/{cidadeAId}")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
         service.excluir(id);
     }
 
-    @PutMapping("/{cidadeId}")
+
+    @PutMapping("/{id}")
     public Cidade atualizar(@PathVariable Long id,
                                             @RequestBody Cidade cidade) {
         var cidadeAtual = buscar(id);
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-        return  service.salvar(cidadeAtual);
+        try {
+            return  service.salvar(cidadeAtual);
+        }catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
+
     }
 }

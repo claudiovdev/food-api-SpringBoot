@@ -1,6 +1,7 @@
 package com.food.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.food.api.domain.exceptions.NegocioException;
 import com.food.api.domain.services.CadastroRestauranteService;
 import com.food.api.domain.exceptions.EntidadeNaoEncontradaException;
 import com.food.api.domain.model.Restaurante;
@@ -45,24 +46,29 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante salvar(@RequestBody Restaurante restaurante){
-          return service.salvar(restaurante);
+          try {
+              return service.salvar(restaurante);
+          }catch (EntidadeNaoEncontradaException e) {
+              throw new NegocioException(e.getMessage());
+          }
     }
 
     @PutMapping("/{restauranteId}")
     public Restaurante atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
            Restaurante restauranteAtual = buscar(id);
            BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produto");
-           return service.salvar(restauranteAtual);
+           try {
+               return service.salvar(restauranteAtual);
+           }catch (EntidadeNaoEncontradaException e){
+               throw new NegocioException(e.getMessage());
+           }
     }
 
     @PatchMapping("/{restauranteId}")
     public Restaurante atualizarParcial(@PathVariable Long restauranteId,
                                               @RequestBody Map<String, Object> campos) {
         Restaurante restauranteAtual = buscar(restauranteId);
-
-
         merge(campos, restauranteAtual);
-
         return atualizar(restauranteId, restauranteAtual);
     }
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
