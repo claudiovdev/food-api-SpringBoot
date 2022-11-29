@@ -1,7 +1,7 @@
 package com.food.api.controllers;
 
-import com.food.api.domain.model.Cozinha;
-import com.food.api.domain.services.CadastroCozinhaService;
+import com.food.domain.model.Cozinha;
+import com.food.domain.services.CadastroCozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
