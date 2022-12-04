@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/cidades")
@@ -30,7 +31,7 @@ public class CidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade salvar(@RequestBody  Cidade cidade) {
+    public Cidade salvar(@RequestBody @Valid Cidade cidade) {
         try {
             return service.salvar(cidade);
         }catch (CozinhaNaoEncontradaException e){
@@ -52,7 +53,7 @@ public class CidadeController {
 
     @PutMapping("/{id}")
     public Cidade atualizar(@PathVariable Long id,
-                                            @RequestBody Cidade cidade) {
+                                            @RequestBody  @Valid Cidade cidade) {
         var cidadeAtual = buscar(id);
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
         try {

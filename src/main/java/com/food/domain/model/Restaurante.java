@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,19 +31,20 @@ public class Restaurante {
 
     //@NotNull
     //@NotEmpty
-    @NotBlank(groups = Groups.CadastroCozinha.class)
+    @NotBlank
     @Column(nullable = false)
     private  String nome;
 
 
-    @PositiveOrZero(groups = Groups.CadastroCozinha.class)
+    @PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
 
 
     @Valid // Essa propriedade define que ele entrará dentro de cozinha e fará as validações, pois por padrão ele não valida modo cascata
-    @NotNull(groups = Groups.CadastroCozinha.class)
+    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class) //Utilizando o ConvertGroup eu indico que é para ele comparar apenas quem tem o grupo cozinha id dentro da classe de cozinha ignorando os outros que estariam com metodo DEFAULT
+    @NotNull
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;

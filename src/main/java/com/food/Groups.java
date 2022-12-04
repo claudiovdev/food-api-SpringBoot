@@ -2,5 +2,7 @@ package com.food;
 
 public interface Groups {
 
-    public interface CadastroCozinha{};
+    public interface CozinhaId{};
+    public interface EstadoId {}
+
 }

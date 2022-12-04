@@ -45,7 +45,7 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante salvar(@RequestBody @Validated(Groups.CadastroCozinha.class) Restaurante restaurante){
+    public Restaurante salvar(@RequestBody @Valid Restaurante restaurante){
           try {
               return service.salvar(restaurante);
           }catch (EntidadeNaoEncontradaException e) {
@@ -54,7 +54,7 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public Restaurante atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
+    public Restaurante atualizar(@PathVariable("restauranteId") Long id, @RequestBody @Valid Restaurante restaurante){
            Restaurante restauranteAtual = buscar(id);
            BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produto");
            try {
