@@ -1,6 +1,7 @@
 package com.food.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.food.Groups;
 import com.food.domain.exceptions.NegocioException;
 import com.food.domain.services.CadastroRestauranteService;
 import com.food.domain.exceptions.EntidadeNaoEncontradaException;
@@ -10,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,7 +45,7 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante salvar(@RequestBody @Valid Restaurante restaurante){
+    public Restaurante salvar(@RequestBody @Validated(Groups.CadastroCozinha.class) Restaurante restaurante){
           try {
               return service.salvar(restaurante);
           }catch (EntidadeNaoEncontradaException e) {

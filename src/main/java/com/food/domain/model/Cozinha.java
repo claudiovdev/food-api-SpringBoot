@@ -1,6 +1,7 @@
 package com.food.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.food.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 public class Cozinha {
 
-    @NotNull
+    @NotNull(groups = Groups.CadastroCozinha.class)
     @EqualsAndHashCode.Exclude
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

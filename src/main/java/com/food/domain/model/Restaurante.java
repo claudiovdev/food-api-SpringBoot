@@ -1,6 +1,7 @@
 package com.food.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.food.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,19 +29,19 @@ public class Restaurante {
 
     //@NotNull
     //@NotEmpty
-    @NotBlank
+    @NotBlank(groups = Groups.CadastroCozinha.class)
     @Column(nullable = false)
     private  String nome;
 
-    @DecimalMin("1")
-    @PositiveOrZero
+
+    @PositiveOrZero(groups = Groups.CadastroCozinha.class)
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
 
 
     @Valid // Essa propriedade define que ele entrará dentro de cozinha e fará as validações, pois por padrão ele não valida modo cascata
-    @NotNull
+    @NotNull(groups = Groups.CadastroCozinha.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
