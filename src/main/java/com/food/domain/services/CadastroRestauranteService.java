@@ -6,6 +6,7 @@ import com.food.domain.repositoryes.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CadastroRestauranteService {
 
     public List<Restaurante> listar(){return  restauranteRepository.findAll();}
 
+    @Transactional
     private void remover(Long id){
         try {
             restauranteRepository.deleteById(id);
@@ -30,6 +32,7 @@ public class CadastroRestauranteService {
         }
     }
 
+    @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
         var cozinha = cozinhaService.buscarCozinha(cozinhaId);
