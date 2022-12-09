@@ -1,5 +1,6 @@
 package com.food.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.food.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
