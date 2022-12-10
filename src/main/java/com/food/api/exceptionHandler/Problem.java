@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -18,7 +19,7 @@ public class Problem {
     private String title;
     private String detail;
     private String userMessage;
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
     private List<Field> fields;
 
 

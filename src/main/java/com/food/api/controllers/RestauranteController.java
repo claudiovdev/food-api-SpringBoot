@@ -1,6 +1,7 @@
 package com.food.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.food.api.model.RestauranteModel;
 import com.food.domain.exceptions.NegocioException;
 import com.food.domain.services.CadastroRestauranteService;
 import com.food.domain.exceptions.EntidadeNaoEncontradaException;
@@ -36,8 +37,11 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public Restaurante buscar(@PathVariable("restauranteId") Long id){
-      return  service.buscar(id);
+    public RestauranteModel buscar(@PathVariable("restauranteId") Long id){
+
+      Restaurante restaurante =   service.buscar(id);
+      RestauranteModel restauranteModel = null;
+      return restauranteModel;
 
     }
 
