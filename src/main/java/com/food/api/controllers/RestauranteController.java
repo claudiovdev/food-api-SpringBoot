@@ -3,8 +3,7 @@ package com.food.api.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.food.api.assembler.RestauranteInputDisassembler;
 import com.food.api.assembler.RestauranteModelAssembler;
-import com.food.api.model.CozinhaModel;
-import com.food.api.model.RestauranteModel;
+import com.food.api.model.models.RestauranteModel;
 import com.food.api.model.input.RestauranteInput;
 import com.food.domain.exceptions.NegocioException;
 import com.food.domain.model.Cozinha;
@@ -22,7 +21,6 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @RequestMapping("/restaurantes")
@@ -71,10 +69,13 @@ public class RestauranteController {
 
     @PutMapping("/{restauranteId}")
     public RestauranteModel atualizar(@PathVariable("restauranteId") Long id, @RequestBody @Valid RestauranteInput restauranteInput){
-        Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-        Restaurante restauranteAtual = service.buscarEntydade(id);
-           BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produto");
+
            try {
+               //        Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+
+               Restaurante restauranteAtual = service.buscarEntydade(id);
+               restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
+               //BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produto");
                return  restauranteModelAssembler.toModel(service.salvar(restauranteAtual));
            }catch (EntidadeNaoEncontradaException e){
                throw new NegocioException(e.getMessage());

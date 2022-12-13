@@ -1,5 +1,9 @@
 package com.food.api.controllers;
 
+import com.food.api.assembler.CozinhaInputDisassembler;
+import com.food.api.assembler.CozinhaModelAssembler;
+import com.food.api.model.input.CozinhaInput;
+import com.food.api.model.models.CozinhaModel;
 import com.food.domain.model.Cozinha;
 import com.food.domain.services.CadastroCozinhaService;
 import org.springframework.beans.BeanUtils;
@@ -17,18 +21,26 @@ public class CozinhaController {
 
     @Autowired
     private CadastroCozinhaService service;
+    @Autowired
+    private CozinhaModelAssembler cozinhaModelAssembler;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)   //Com essa produces definimos que o retnoro será sempre em Json á nivel de método
-    public List<Cozinha> listar(){
-        return service.listar();
+    @Autowired
+    private CozinhaInputDisassembler cozinhaInputDisassembler;
+
+    @GetMapping
+    public List<CozinhaModel> listar() {
+        List<Cozinha> todasCozinhas = service.listar();
+
+        return cozinhaModelAssembler.toCollectionModel(todasCozinhas);
     }
 
 
 
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha  buscar(@PathVariable("cozinhaId") Long id){
-       return service.buscarCozinha(id);
+    public CozinhaModel buscar(@PathVariable Long cozinhaId) {
+        Cozinha cozinha = service.buscarCozinha(cozinhaId);
+        return cozinhaModelAssembler.toModel(cozinha);
     }
 
 
@@ -36,17 +48,22 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha salvar(@RequestBody @Valid Cozinha cozinha){
-        return service.salvar(cozinha);
+    public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
+        Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+        cozinha = service.salvar(cozinha);
+
+        return cozinhaModelAssembler.toModel(cozinha);
     }
 
 
     @PutMapping("/{cozinhaId}")
-    public Cozinha atualizar(@PathVariable("cozinhaId") Long id, @RequestBody Cozinha cozinha){
-         Cozinha cozinhaAtual = service.buscarCozinha(id);
-         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-         Cozinha cozinhaSalva =  service.salvar(cozinhaAtual);
-         return cozinhaSalva;
+    public CozinhaModel atualizar(@PathVariable Long cozinhaId,
+                                  @RequestBody @Valid CozinhaInput cozinhaInput) {
+        Cozinha cozinhaAtual = service.buscarCozinha(cozinhaId);
+        cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
+        cozinhaAtual = service.salvar(cozinhaAtual);
+
+        return cozinhaModelAssembler.toModel(cozinhaAtual);
     }
 
 

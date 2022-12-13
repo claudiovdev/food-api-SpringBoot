@@ -1,4 +1,4 @@
-package com.food.api.model;
+package com.food.api.model.models;
 
 import lombok.Getter;
 import lombok.Setter;

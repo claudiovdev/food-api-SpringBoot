@@ -1,7 +1,6 @@
 package com.food.api.assembler;
 
-import com.food.api.model.CozinhaModel;
-import com.food.api.model.RestauranteModel;
+import com.food.api.model.models.RestauranteModel;
 import com.food.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

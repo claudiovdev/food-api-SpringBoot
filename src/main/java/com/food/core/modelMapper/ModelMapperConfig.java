@@ -1,7 +1,5 @@
 package com.food.core.modelMapper;
 
-import com.food.api.model.RestauranteModel;
-import com.food.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +18,7 @@ public class ModelMapperConfig {
 //
 //        modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
  //               .addMapping(Restaurante::getTaxaFrete, RestauranteModel::setPrecoFrete);
-        
+
         return new ModelMapper();
     }
 }
