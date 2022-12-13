@@ -31,23 +31,18 @@ public class Restaurante {
     private Long id;
 
 
-    //@NotNull
-    //@NotEmpty
-    @NotBlank
+
     @Column(nullable = false)
     private  String nome;
 
 
-    @NotNull
-    @PositiveOrZero
+
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
 
 
-    @Valid // Essa propriedade define que ele entrará dentro de cozinha e fará as validações, pois por padrão ele não valida modo cascata
-    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class) //Utilizando o ConvertGroup eu indico que é para ele comparar apenas quem tem o grupo cozinha id dentro da classe de cozinha ignorando os outros que estariam com metodo DEFAULT
-    @NotNull
+
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;

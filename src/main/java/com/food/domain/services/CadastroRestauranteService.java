@@ -40,7 +40,7 @@ public class CadastroRestauranteService {
         return restauranteRepository.save(restaurante);
     }
 
-    public Restaurante buscar(Long id){
+    public Restaurante buscarEntydade(Long id){
         return restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradaException(id));
     }
 

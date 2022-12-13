@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 public class Cozinha {
 
-    @NotNull(groups = Groups.CozinhaId.class)
+
     @EqualsAndHashCode.Exclude
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
