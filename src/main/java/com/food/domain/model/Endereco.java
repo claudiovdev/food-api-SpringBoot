@@ -6,7 +6,6 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-@Embeddable
 public class Endereco {
 
     @Column(name = "endereco_cep")
