@@ -1,0 +1,1 @@
+alter table restaurante add ativo SMALLINT ;

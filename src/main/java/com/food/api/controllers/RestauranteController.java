@@ -113,26 +113,24 @@ public class RestauranteController {
        return service.consultarComFreteGratis(nome);
     }
 
-
-
-    private Restaurante toModelEntity(RestauranteModel restauranteModel){
-        Cozinha cozinhaModel = new Cozinha();
-        cozinhaModel.setId(restauranteModel.getCozinha().getId());
-        cozinhaModel.setNome(restauranteModel.getCozinha().getNome());
-
-        Restaurante restaurante = new Restaurante();
-        restaurante.setId(restaurante.getId());
-        restaurante.setNome(restaurante.getNome());
-        restaurante.setTaxaFrete(restaurante.getTaxaFrete());
-        restaurante.setCozinha(cozinhaModel);
-        return restaurante;
+    @PutMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restauranteId){
+        service.ativar(restauranteId);
     }
 
-
+    @DeleteMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inaativar(@PathVariable Long restauranteId){
+        service.inativar(restauranteId);
+    }
 
     private RestauranteInput toInputObjetc(Restaurante restaurante){
         RestauranteInput restauranteInput = new RestauranteInput();
         BeanUtils.copyProperties(restaurante,restauranteInput);
         return restauranteInput;
     }
+
+
+
 }
