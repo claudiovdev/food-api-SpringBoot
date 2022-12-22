@@ -7,9 +7,11 @@ import com.food.domain.repositoryes.GrupoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+@Service
 public class CadastroGrupoService  {
 
     private static final String MSG_GRUPO_EM_USO
