@@ -5,6 +5,8 @@ import com.food.api.assembler.RestauranteInputDisassembler;
 import com.food.api.assembler.RestauranteModelAssembler;
 import com.food.api.model.models.RestauranteModel;
 import com.food.api.model.input.RestauranteInput;
+import com.food.domain.exceptions.CidadeNaoEncontradaException;
+import com.food.domain.exceptions.CozinhaNaoEncontradaException;
 import com.food.domain.exceptions.NegocioException;
 import com.food.domain.model.Cozinha;
 import com.food.domain.services.CadastroRestauranteService;
@@ -67,40 +69,20 @@ public class RestauranteController {
           }
     }
 
+
+
     @PutMapping("/{restauranteId}")
-    public RestauranteModel atualizar(@PathVariable("restauranteId") Long id, @RequestBody @Valid RestauranteInput restauranteInput){
+    public RestauranteModel atualizar(@PathVariable Long restauranteId,
+                                      @RequestBody @Valid RestauranteInput restauranteInput) {
+        try {
+            Restaurante restauranteAtual = service.buscarEntydade(restauranteId);
 
-           try {
-               //        Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+            restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
-               Restaurante restauranteAtual = service.buscarEntydade(id);
-               restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
-               //BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produto");
-               return  restauranteModelAssembler.toModel(service.salvar(restauranteAtual));
-           }catch (EntidadeNaoEncontradaException e){
-               throw new NegocioException(e.getMessage());
-           }
-    }
-
-    @PatchMapping("/{restauranteId}")
-    public RestauranteModel atualizarParcial(@PathVariable Long restauranteId,
-                                              @RequestBody Map<String, Object> campos) {
-        Restaurante restauranteAtual = service.buscarEntydade(restauranteId);
-        merge(campos, restauranteAtual);
-        return atualizar(restauranteId, toInputObjetc(restauranteAtual));
-    }
-    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
-
-        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-            field.setAccessible(true);
-
-            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-
-            ReflectionUtils.setField(field, restauranteDestino, novoValor);
-        });
+            return restauranteModelAssembler.toModel(service.salvar(restauranteAtual));
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @GetMapping("/consulta-por-nome")

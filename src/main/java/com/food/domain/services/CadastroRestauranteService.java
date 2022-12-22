@@ -1,7 +1,12 @@
 package com.food.domain.services;
 
+import com.food.domain.exceptions.CidadeNaoEncontradaException;
+import com.food.domain.exceptions.CozinhaNaoEncontradaException;
 import com.food.domain.exceptions.RestauranteNaoEncontradaException;
+import com.food.domain.model.Cidade;
+import com.food.domain.model.Cozinha;
 import com.food.domain.model.Restaurante;
+import com.food.domain.repositoryes.CidadeRepository;
 import com.food.domain.repositoryes.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,6 +25,9 @@ public class CadastroRestauranteService {
     @Autowired
     private CadastroCozinhaService cozinhaService;
 
+    @Autowired
+    private CidadeRepository cidadeRepository;
+
     public List<Restaurante> listar(){return  restauranteRepository.findAll();}
 
     @Transactional
@@ -36,8 +44,14 @@ public class CadastroRestauranteService {
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
-        var cozinha = cozinhaService.buscarCozinha(cozinhaId);
+        Long cidadeId = restaurante.getEndereco().getCidade().getId();
+
+        Cozinha cozinha = cozinhaService.buscarCozinha(cozinhaId);
+        Cidade cidade = cidadeRepository.findById(cidadeId).orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
+
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
+
         return restauranteRepository.save(restaurante);
     }
 

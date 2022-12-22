@@ -13,7 +13,6 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 @Entity
 public class Cozinha {
 

@@ -1,7 +1,9 @@
 package com.food.core.modelMapper;
 
 import com.food.api.model.models.EnderecoModel;
+import com.food.api.model.models.RestauranteModel;
 import com.food.domain.model.Endereco;
+import com.food.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,18 +18,20 @@ public class ModelMapperConfig {
 *
 * */
 
-//        var modelMapper = new ModelMapper();
-//
+        var modelMapper = new ModelMapper();
+
 //        modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
-//               .addMapping(Restaurante::getTaxaFrete, RestauranteModel::setPrecoFrete);
+//               .addMapping(Restaurante::getTaxaFrete, RestauranteModel::setTaxaFrete);
 
 
 
 
-//        var enderecoToEnderecoModelType = modelMapper().createTypeMap(Endereco.class, EnderecoModel.class);
-//        enderecoToEnderecoModelType.<String>addMapping(
-//                endereco -> endereco.getCidade().getEstado().getNome(),
-//                (enderecoDestino , value) -> enderecoDestino.getCidade().setNomeEstado(value));
+        var enderecoToEnderecoModelTypeMap = modelMapper.createTypeMap(
+                Endereco.class, EnderecoModel.class);
+
+        enderecoToEnderecoModelTypeMap.<String>addMapping(
+                enderecoSrc -> enderecoSrc.getCidade().getEstado().getNome(),
+                (enderecoModelDest, value) -> enderecoModelDest.getCidade().setNomeEstado(value));
 
         return new ModelMapper();
     }
