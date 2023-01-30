@@ -1,12 +1,12 @@
 package com.food.domain.services;
 
-import com.food.domain.exceptions.CidadeNaoEncontradaException;
-import com.food.domain.exceptions.CozinhaNaoEncontradaException;
-import com.food.domain.exceptions.RestauranteNaoEncontradaException;
+import com.food.domain.exceptions.*;
 import com.food.domain.model.Cidade;
 import com.food.domain.model.Cozinha;
+import com.food.domain.model.FormaPagamento;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repositoryes.CidadeRepository;
+import com.food.domain.repositoryes.FormaPagamentoRepository;
 import com.food.domain.repositoryes.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,6 +27,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     private CidadeRepository cidadeRepository;
+
+    @Autowired
+    private FormaPagamentoRepository formaPagamentoRepository;
 
     public List<Restaurante> listar(){return  restauranteRepository.findAll();}
 
@@ -79,6 +82,13 @@ public class CadastroRestauranteService {
 
     public List<Restaurante> consultarPorNome(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
         return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
+    }
+
+    @Transactional
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante restaurante = buscarEntydade(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoRepository.findById(formaPagamentoId).orElseThrow(() -> new FormaPagamentoNaoEncontradaException(formaPagamentoId));
+        restaurante.associar(formaPagamento);
     }
 
 }

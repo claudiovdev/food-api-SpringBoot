@@ -7,6 +7,7 @@ import com.food.domain.repositoryes.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -16,9 +17,12 @@ public class CadastroUsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    EntityManager manager;
+
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        usuarioRepository.detach(usuario);
+       manager.detach(usuario);
         Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
         if(usuarioExistente.isPresent() && !usuarioExistente.equals(usuario)){
             throw new NegocioException(String.format("Já existe usuario cadastrado no email %s", usuario.getEmail()));
